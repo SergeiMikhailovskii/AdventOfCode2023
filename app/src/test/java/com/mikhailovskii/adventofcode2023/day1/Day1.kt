@@ -1,5 +1,6 @@
 package com.mikhailovskii.adventofcode2023.day1
 
+import com.mikhailovskii.adventofcode2023.findAllWithOverlap
 import com.mikhailovskii.adventofcode2023.println
 import com.mikhailovskii.adventofcode2023.readInput
 import org.junit.Test
