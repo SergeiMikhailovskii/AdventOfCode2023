@@ -2,6 +2,8 @@ package com.mikhailovskii.adventofcode2023.day3
 
 import com.mikhailovskii.adventofcode2023.readInput
 import org.junit.Test
+import kotlin.math.max
+import kotlin.math.min
 
 class Day3 {
     private val Char.isValidSymbol: Boolean
@@ -43,5 +45,71 @@ class Day3 {
             }
         }
         println(sum)
+    }
+
+    @Test
+    fun part2() {
+        val input = readInput("day3/input2")
+
+        data class NumberWithCoords(
+            val start: Int,
+            val end: Int,
+            val num: Int
+        )
+
+        fun findNumberByCoords(i: Int, j: Int): NumberWithCoords {
+            var x = j
+            while (x >= 0) {
+                if (input[i][x].isDigit()) {
+                    x--
+                } else {
+                    break
+                }
+            }
+            val start = x
+            x = j + 1
+            while (x < input[i].length) {
+                if (input[i][x].isDigit()) {
+                    x++
+                } else {
+                    break
+                }
+            }
+            val end = x
+            var numStr = ""
+            for (k in start + 1..<end) {
+                numStr += input[i][k]
+            }
+            return NumberWithCoords(start, end, numStr.toInt())
+        }
+
+        fun findAllNumbersNearMultiply(i: Int, j: Int): List<Int> {
+            val numbers = mutableSetOf<NumberWithCoords>()
+            for (y in max(0, i - 1)..min(i + 1, input.size - 1)) {
+                for (x in max(0, j - 1)..min(j + 1, input[i].length - 1)) {
+                    if (input[y][x].isDigit()) {
+                        numbers.add(findNumberByCoords(y, x))
+                    }
+                }
+            }
+            return numbers.map { it.num }.toList()
+        }
+
+        var totalSum = 0
+
+        for (i in input.indices) {
+            for (j in input[i].indices) {
+                if (input[i][j] == '*') {
+                    val nums = findAllNumbersNearMultiply(i, j)
+                    if (nums.size == 2) {
+                        totalSum += nums.fold(1) { acc, it ->
+                            acc * it
+                        }
+                    }
+                }
+            }
+        }
+
+        println(totalSum)
     }
 }
