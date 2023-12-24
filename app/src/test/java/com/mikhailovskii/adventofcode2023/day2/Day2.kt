@@ -35,4 +35,40 @@ class Day2 {
         }
         println(valid)
     }
+
+    @Test
+    fun part2() {
+        val input = readInput("day2/input2")
+        val sum = input
+            .map { it.replace(Regex("Game (\\d+): "), "") }
+            .map { it ->
+                var reds = 1
+                var greens = 1
+                var blues = 1
+                it.split(";").forEach { it ->
+                    val pairs = it.split(",")
+                        .map { it.trim() }
+
+                    for (it in pairs) {
+                        val arr = it.split(" ")
+                        val amount = arr[0].toInt()
+                        when (arr[1]) {
+                            "red" -> {
+                                reds = maxOf(reds, amount)
+                            }
+
+                            "green" -> {
+                                greens = maxOf(greens, amount)
+                            }
+
+                            "blue" -> {
+                                blues = maxOf(blues, amount)
+                            }
+                        }
+                    }
+                }
+                reds * greens * blues
+            }.sum()
+        println(sum)
+    }
 }
